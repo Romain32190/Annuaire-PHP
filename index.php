@@ -6,6 +6,16 @@
     <title>Annuaire PHP</title>
   </head>
   <body>
+    <nav>
+        <div class="nav-wrapper teal darken-2">
+           <a href="#" class="brand-logo">Annuaire</a>
+           <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="index.php">Ajouter un contact</a></li>
+            <li><a href="contact.php">Ajouter un groupe</a></li>
+            <li><a href="user.php">Annuaire</a></li>
+          </ul>
+        </div>
+      </nav>
   <div class="container">
     <h2 class="center-align">Formulaire</h2>
     <form action="user.php" method="post">
@@ -21,22 +31,22 @@
       <input type="text" name="adresse" placeholder="Adresse">
       <label for="phone">Numéro de téléphone</label>
       <input type="text" name="phone" placeholder="Numéro de téléphone">
-      <!-- <p>
-        <input type="checkbox" id="groupe1" />
-        <label for="groupe1">Amis</label>
-      </p>
       <p>
-        <input type="checkbox" id="groupe2"/>
-        <label for="groupe2">Collègues</label>
+        <?php
+
+        try {
+          $bdd = new PDO("mysql:host=localhost; dbname=Annuaire; charset=utf8", "Annuaire", "508o2mtEjBddspk1");
+        } catch (Exception $e) {
+          die("Erreur : ".$e -> getMessage());
+        }
+
+         $reponse = $bdd->query("SELECT * FROM Groupe");
+         foreach ($reponse as $value) {
+           echo '<p><input type="checkbox" name="groupe[]" value="'.$value['id'].'" id="'.$value['name'].'" /><label for="'.$value['name'].'">'.$value['name'].'</label></p>';
+         }
+         ?>
       </p>
-      <p>
-        <input type="checkbox" id="groupe3" />
-        <label for="groupe3">Famille</label>
-      </p>
-      <p>
-        <input type="checkbox" id="groupe4" />
-        <label for="groupe4">Autres</label>
-      </p> -->
+
       <button  class="waves-effect waves-light btn green" type="submit">Valider</button>
     </form>
 

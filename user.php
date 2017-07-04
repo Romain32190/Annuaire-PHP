@@ -16,6 +16,7 @@ $naissance = $_POST['naissance'];
 $entreprise = $_POST['entreprise'];
 $adresse = $_POST['adresse'];
 $id = $_POST['id'];
+$groupe = $_POST['groupe'];
 
 if(!empty($_POST['lastname']) && !empty($_POST['firstname'])
   && !empty($_POST['phone'])
@@ -35,13 +36,16 @@ if(!empty($_POST['lastname']) && !empty($_POST['firstname'])
           'adresse' => $adresse,
         ));
 }
-// else {
-//
-//   echo 'failed';
-// }
-//
-// $reponse = $bdd->query('SELECT * FROM groupe');
 
+$id = $bdd->lastInsertId();
+foreach($groupe as $valeur)
+{
+  $req = $bdd->prepare("INSERT INTO groupe_associatif (`id_groupe`,`id_contact`) VALUES (:id_groupe, :id_contact)");
+  $req->execute([
+    'id_groupe'=>$valeur,
+    'id_contact'=>$id
+  ]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +56,16 @@ if(!empty($_POST['lastname']) && !empty($_POST['firstname'])
     <title>Tableau</title>
   </head>
   <body>
+    <nav>
+        <div class="nav-wrapper teal darken-2">
+           <a href="#" class="brand-logo">Annuaire</a>
+           <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="index.php">Ajouter un contact</a></li>
+            <li><a href="contact.php">Ajouter un groupe</a></li>
+            <li><a href="user.php">Annuaire</a></li>
+          </ul>
+        </div>
+      </nav>
     <h2 class="center-align">Annuaire</h2>
 
     <table class="bordered">
@@ -66,9 +80,10 @@ if(!empty($_POST['lastname']) && !empty($_POST['firstname'])
           <th>Date d'inscription</th>
           <th>Modifiez</th>
           <th>Supprimez</th>
+        </tr>
         </thead>
       <tbody>
-    <?php
+        <?php
         while($donnees=$reponse->fetch()){
           echo '<tr><td>' . $donnees['prenom'] .
           '</td><td>' . $donnees['nom'].
